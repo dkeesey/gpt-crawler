@@ -20,7 +20,7 @@ export function getPageHtml(page: Page, selector = "body") {
         document,
         null,
         XPathResult.ANY_TYPE,
-        null
+        null,
       );
       let result = elements.iterateNext();
       return result ? result.textContent || "" : "";
@@ -40,12 +40,12 @@ export async function waitForXPath(page: Page, xpath: string, timeout: number) {
         document,
         null,
         XPathResult.ANY_TYPE,
-        null
+        null,
       );
       return elements.iterateNext() !== null;
     },
     xpath,
-    { timeout }
+    { timeout },
   );
 }
 
@@ -62,7 +62,7 @@ export async function crawl(config: Config) {
           const title = await page.title();
           pageCounter++;
           log.info(
-            `Crawling: Page ${pageCounter} / ${config.maxPagesToCrawl} - URL: ${request.loadedUrl}...`
+            `Crawling: Page ${pageCounter} / ${config.maxPagesToCrawl} - URL: ${request.loadedUrl}...`,
           );
 
           // Use custom handling for XPath selector
@@ -71,7 +71,7 @@ export async function crawl(config: Config) {
               await waitForXPath(
                 page,
                 config.selector,
-                config.waitForSelectorTimeout ?? 1000
+                config.waitForSelectorTimeout ?? 1000,
               );
             } else {
               await page.waitForSelector(config.selector, {
@@ -134,17 +134,17 @@ export async function crawl(config: Config) {
             }
             await page.route(
               `**\/*.{${RESOURCE_EXCLUSTIONS.join()}}`,
-              (route) => route.abort("aborted")
+              (route) => route.abort("aborted"),
             );
             log.info(
-              `Aborting requests for as this is a resource excluded route`
+              `Aborting requests for as this is a resource excluded route`,
             );
           },
         ],
       },
       new Configuration({
         purgeOnStart: true,
-      })
+      }),
     );
 
     const isUrlASitemap = /sitemap.*\.xml$/.test(config.url);
@@ -189,10 +189,10 @@ export async function write(config: Config) {
     nextFileNameString = nextFileName();
     await writeFile(
       nextFileNameString,
-      JSON.stringify(currentResults, null, 2)
+      JSON.stringify(currentResults, null, 2),
     );
     console.log(
-      `Wrote ${currentResults.length} items to ${nextFileNameString}`
+      `Wrote ${currentResults.length} items to ${nextFileNameString}`,
     );
     currentResults = [];
     currentSize = 0;
@@ -202,12 +202,12 @@ export async function write(config: Config) {
   let estimatedTokens: number = 0;
 
   const addContentOrSplit = async (
-    data: Record<string, any>
+    data: Record<string, any>,
   ): Promise<void> => {
     const contentString: string = JSON.stringify(data);
     const tokenCount: number | false = isWithinTokenLimit(
       contentString,
-      config.maxTokens || Infinity
+      config.maxTokens || Infinity,
     );
 
     if (typeof tokenCount === "number") {
