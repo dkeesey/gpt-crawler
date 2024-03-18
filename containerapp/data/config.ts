@@ -1,4 +1,4 @@
-import { Config } from "./src/config";
+import { Config } from "../../src/config";
 
 export const defaultConfig: Config = {
   url: "https://www.builder.io/c/docs/developers",
